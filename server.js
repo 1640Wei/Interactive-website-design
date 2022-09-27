@@ -19,7 +19,7 @@ app.use(express.static('public'));
 var HTTP_PORT = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
-    res.redirect('/about.html');
+    res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
 app.listen(HTTP_PORT);
