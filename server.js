@@ -10,6 +10,7 @@
 ********************************************************************************/
 
 
+var blog_service = require("blog-service");
 
 var express = require("express");
 const path = require("path");
