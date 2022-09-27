@@ -39,11 +39,17 @@ module.exports.getAllPosts = function() {
 
 module.exports.getPublishedPosts = function() {
     return new Promise((resolve,reject) => {
-        if (posts.length == 0) {
-            reject("File is empty, no posts to be displayed.");
+        var filterPosts = [];
+        for (let i = 0; i < posts.length; i++){
+            if(posts[i].published == true) {
+                filterPosts.push(posts[i]);
+            }
+        }
+        if (filterPosts.length == 0) {
+            reject("No Published Post found.");
         }
         else {
-            resolve(posts.published == true)
+            resolve(filterPosts);
         }
     })
 }
