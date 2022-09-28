@@ -29,9 +29,9 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
-/*app.get("/",function(req,res){
+app.get("/",function(req,res){
     res.redirect("/about");
-})*/
+});
 
 app.get("/blog", function(req,res) {
     res.sendFile(path.join(__dirname,"data/posts.json"));
@@ -48,6 +48,11 @@ app.get("/categories", function(req,res) {
 app.use((req,res)=>{
     res.status(404).send("Page dose not exist, please contact your provider!!")
 });
+
+/*app.use((req,res)=>{
+    res.status(404).sendFile(path.join(__dirname,"/views/404.html"));
+});*/
+
 
 app.get("/posts",(req,res) => {
     data.getAllPosts().then((data) => {
