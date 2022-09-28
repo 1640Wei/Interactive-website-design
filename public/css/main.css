@@ -1,3 +1,19 @@
 body {
-    background-color: aquamarine;
+    background-color:#fde4e1;
+}
+
+.photo {
+    position: absolute;
+    top: 225px;
+    left: 230px;
+}
+
+.cardOne {
+    margin-top: 27px;
+    margin-left:98px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 23%;
+    border-radius: 10px;
+    float: left;
 }
