@@ -10,17 +10,46 @@
 ********************************************************************************/
 
 
-var blog_service = require("blog-service");
+
 
 var express = require("express");
 const path = require("path");
+const data = require("./blog-service.js");
+
 var app = express();
 app.use(express.static('public'));
 
 var HTTP_PORT = process.env.PORT || 8080;
 
+function onHTTPSTART() {
+    console.log("Express http server listening on: " + HTTP_PORT);
+}
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
-app.listen(HTTP_PORT);
+app.get("/posts",(req,res) => {
+    data.getAllPosts().then((data) => {
+        res.json(data);
+    });
+});
+
+app.get("/publishedPosts",(req,res) => {
+    data.getPublishedPosts().then((data) => {
+        res.json(data);
+    });
+});
+
+app.get("/categories",(req,res) => {
+    data.getCategories().then((data) => {
+        res.json(data);
+    });
+});
+
+//app.listen(HTTP_PORT);
+data.initialize().then(function(){
+    app.listen(HTTP_PORT,onHTTPSTART);
+}).catch(function(err){
+    console.log("Unable to start server: "+ err);
+})
