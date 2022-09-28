@@ -29,6 +29,26 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
+/*app.get("/",function(req,res){
+    res.redirect("/about");
+})*/
+
+app.get("/blog", function(req,res) {
+    res.sendFile(path.join(__dirname,"data/posts.json"));
+});
+
+app.get("/posts", function(req,res) {
+    res.sendFile(path.join(__dirname,"data/posts.json"));
+});
+
+app.get("/categories", function(req,res) {
+    res.sendFile(path.join(__dirname,"data/categories.json"));
+});
+
+app.use((req,res)=>{
+    res.status(404).send("Page dose not exist, please contact your provider!!")
+});
+
 app.get("/posts",(req,res) => {
     data.getAllPosts().then((data) => {
         res.json(data);
@@ -47,7 +67,6 @@ app.get("/categories",(req,res) => {
     });
 });
 
-//app.listen(HTTP_PORT);
 data.initialize().then(function(){
     app.listen(HTTP_PORT,onHTTPSTART);
 }).catch(function(err){

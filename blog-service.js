@@ -14,16 +14,16 @@ let posts = [];
 
 module.exports.initialize = function() {
     return new Promise ((resolve,reject) => {
-        fs.readFile('./data/posts.json'),(err,data) => {
+        fs.readFile('./data/posts.json',(err,data) => {
             if(err){
-                reject("unable to read file");
+                reject("Unable to read file");
             }
             else {
-                posts = JSON.parse(data)
+                posts = JSON.parse(data);
                 resolve();
             }
-        }
-    })
+        });
+    });
 }
 
 module.exports.getAllPosts = function() {
@@ -34,7 +34,7 @@ module.exports.getAllPosts = function() {
         else {
             resolve(posts);
         }
-    })
+    });
 }
 
 module.exports.getPublishedPosts = function() {
@@ -51,7 +51,7 @@ module.exports.getPublishedPosts = function() {
         else {
             resolve(filterPosts);
         }
-    })
+    });
 }
 
 module.exports.getCategories = function() {
@@ -62,5 +62,5 @@ module.exports.getCategories = function() {
         else {
             resolve (categories);
         }
-    })
+    });
 }
