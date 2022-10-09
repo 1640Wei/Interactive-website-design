@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
-app.get("/addPost", (req, res) => {
+app.get("/add", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/addPost.html"));
 });
 
