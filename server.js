@@ -29,6 +29,10 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname,"/views/about.html"));
 });
 
+app.get("/addPost", (req, res) => {
+    res.sendFile(path.join(__dirname,"/views/addPost.html"));
+});
+
 app.get("/",function(req,res){
     res.redirect("/about");
 });
