@@ -64,3 +64,12 @@ module.exports.getCategories = function() {
         }
     });
 }
+
+module.exports.addPost = function(movieData) {
+    return new Promise(function(resolve,reject){
+        movieData.id = posts.length + 1;
+        movieData.published = (published.published)? true: false;
+        posts.push(movieData);
+        resolve;
+    })
+}

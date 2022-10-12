@@ -5,8 +5,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <!-- Latest compiled and minified Bootstrap 3.4.1 CSS -->
-      <link rel="stylesheet" href="https://bootswatch.com/3/sandstone/bootstrap.min.css" />
-      <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
       
       <title>About</title>
   </head>
@@ -23,107 +23,96 @@
           </button>
           <span class="navbar-brand" href="#">WEB322 - Ching Wei Lai</span>
         </div>
+    
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="/blog">Blog</a></li>
-            <!-- <li class="active"><a href="/about">About</a></li>-->
-            <li class="active"><a href="/add">Add Post</a></li>
+            <li><a href="/about">About</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/posts">Posts</a></li>
-            <li><a href="/categories">Categories</a></li> 
-            <li><a href="/posts/add">Add Post</a></li>           
+            <li><a href="/categories">Categories</a></li>
+            <li class="active"><a href="/posts/add">Add Post</a></li>            
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
     <div class="container" style="padding-top:60px">
       <div class="row">
-        <!--
-        <section class="main col-md-9">
-          <article>
-          <h2>About Me</h2>
-          <div class="a">
-            <br>Hi!!<br>
-            I am Ching Wei Lai.<br>
-            A computer programming student of Seneca College.<br>
-            I am a film enthusiast and always attracted to villains in movies.<br>
-          </div>          
-          </article>
-        </section>
-     
-        <aside class="col-md-3">
-          <h2>Why so serious?</h2>
-          <div class="c"> <br>“The only sensible way to live in this world is without rules.” 
-            ― The Joker<br></div>
-        </aside>    
+        <div class="col-md-12">
+          <h2>Add Post</h2>
+
+          <br />
+  
+          <form method="post" action="/posts/add" enctype="multipart/form-data">
+  
+              <fieldset>
+                  <legend>Feature Image</legend>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <input class="form-control" id="featureImage" name="featureImage" type="file" />
+                          </div>
+                      </div>
+                  </div>
+              </fieldset>
+              <br />
+              <fieldset>
+                <legend>Post Content</legend>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label for="title">Title:</label>
+                              <input class="form-control" id="title" name="title" type="text" />
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-group">
+                              <label for="body">Body:</label>
+                             <textarea class="form-control" id="body" name="body" rows=15></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="category">Category:</label>
+                              <select class="form-control" name="category" id="category">
+                                <option value="1">Technology</option>
+                                <option value="2">Gaming</option>
+                                <option value="3">Fashion</option>
+                                <option value="4">Education</option>
+                                <option value="5">Wellness</option>
+             
+                              </select> 
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="category">Visibility:</label>
+                            <div class="checkbox">
+                              <label>
+                                <input type="checkbox" name="published" id="published"> Published
+                              </label>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+  
+              </fieldset>
+  
+              <hr />
+  
+              <input type="submit" class="btn btn-primary pull-right" value="Add Post" /><br /><br /><br />
+  
+          </form>
       </div>
-
-      <div class="b">
-        My favorite movie character and why do I love him?
       </div>
-      <sidebar>
-      <div class ="d">
-        Heath Ledger’s Joker in The Dark Knight has various features which are intelligent, insance, and strange. He is my favorite movie character.<br><br>
-        Most of the villains certainly have desire in the film, it could be power, money, fame or beauty and you can see it as weakness. However, the lure of power or money are  not attractive to the Joker. Tons of money from the mob is burned by the Joker because he thinks that is useless for him. The Joker is the type of man he cannot be bought, bullied, reasoned or negotiated with. He only has the only target that he wants to destroy — Batman.<br><br>
-        The villains have to face not only the Gotham city’s police, district attorney, lieutenant but also the main character Batman with high intelligence, good physical fitness and lethal force in the movie. What kind of villain could be so bold or fearless? The answer is only the Joker. <br><br>
-        “Why so serious?” is the signature catchphrase  from the Joker of the movie The Dark Knight. The most attractive part for the audience is the Joker is an intelligent and alluring antagonist and he has rare characteristics which are different from other villains.<br><br><br>
-      </sidebar>
-      <iframe src="https://giphy.com/embed/ibCIiQz8QGdl6" width="369" height="480" frameBorder="0" class="giphy-embed" allowFullScreen>
-      </iframe> -->
-
-      <div class="col-md-12">
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input class="form-control" id="title" name="title" type="text" />
-        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="body">Body:</label>
-           <textarea class="form-control" id="body" name="body" rows=15></textarea>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <select class="form-control" name="category" id="category">
-              <option value="1">Technology</option>
-              <option value="2">Gaming</option>
-              <option value="3">Fashion</option>
-              <option value="4">Education</option>
-              <option value="5">Wellness</option>
 
-            </select> 
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-          <label for="category">Visibility:</label>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="published" id="published"> Published
-            </label>
-          </div>
-        </div>
-    </div>
-</div>
-
-</fieldset>
-
-<hr />
-
-<input type="submit" class="btn btn-primary pull-right" value="Add Post" /><br /><br /><br />
-
-</form>
-</div>
-</div>
-    
     <!-- Latest compiled and minified jQuery 3.6.0 JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
