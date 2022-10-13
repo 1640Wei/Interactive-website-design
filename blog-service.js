@@ -1,9 +1,9 @@
 /*********************************************************************************
-*  WEB322 – Assignment 02
+*  WEB322 – Assignment 03
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: Ching Wei Lai   Student ID: 136893211   Date: 29 Sep 2022
+*  Name: Ching Wei Lai   Student ID: 136893211   Date: 13 Oct 2022
 *
 *  Online (Cyclic) Link: https://better-calf-scarf.cyclic.app
 *
@@ -65,11 +65,47 @@ module.exports.getCategories = function() {
     });
 }
 
-module.exports.addPost = function(movieData) {
-    return new Promise(function(resolve,reject){
-        movieData.id = posts.length + 1;
-        movieData.published = (published.published)? true: false;
-        posts.push(movieData);
-        resolve;
-    })
-}
+module.exports.addPost = function(postData){
+    return new Promise((resolve, reject) => {
+        postData.id = postsArray.length +1;
+        postData.published = (postData.published)? true: false;
+        postsArray.push(postData);
+        resolve();     
+    });
+};
+
+module.exports.getPostsByCategory = (category)=>{
+    return new Promise((resolve,reject) => {
+        let filteredPosts = postsArray.filter((post)=>post.category==category);
+        if(filteredPosts.length == 0){
+            reject("no result returned");
+        }else {
+            resolve(filteredPosts);
+        }
+    });
+};
+ 
+module.exports.getPostsByMInDate = (minDateStr) =>{
+    return new Promise((resolve,reject)=>{
+        let filteredPosts = postsArray.filter(
+            (post) => new Date(post.postDate) >= new Date(minDateStr)
+        );
+        if(filteredPosts.length == 0){
+            reject("no result returned");
+        }
+        else {
+            resolve(filteredPosts);
+        }
+    });
+};
+
+module.exports.getPostById = (Id) =>{
+    return new Promise((resolve,reject) => {
+    let filteredPosts = postsArray.filter((post)=>post.id== Id);
+    if(filteredPosts.length == 0){
+        reject("no result returned");
+    }else {
+        resolve(filteredPosts);
+    }
+});
+};
