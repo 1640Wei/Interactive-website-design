@@ -19,22 +19,13 @@ const streamifier = require('streamifier');
 
 var app = express();
 app.use(express.static('public')); 
-app.use(express.urlencoded({ extended: true })); //????
+app.use(express.urlencoded({ extended: true })); 
 const upload = multer();
 
 var HTTP_PORT = process.env.PORT || 8080;
-
 function onHTTPSTART() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
-
-/*app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname,"/views/about.html"));
-});
-
-app.get("/",function(req,res){
-    res.redirect("/about");
-});*/
 
 app.get("/", function (req, res) {
     res.redirect("/about");
@@ -48,7 +39,6 @@ app.get("/blog", function(req,res) {
     res.sendFile(path.join(__dirname,"data/posts.json"));
 });
 
-
 app.get("/categories", function(req,res) {
     res.sendFile(path.join(__dirname,"data/categories.json"));
 });
@@ -56,8 +46,6 @@ app.get("/categories", function(req,res) {
 app.get("/posts/add", function (req, res) {
     res.sendFile(path.join(__dirname, "/views/addPost.html"));
  });
-
-
 
 app.get("/posts", function (req, res) {
     if(req.query.category) {
@@ -83,7 +71,6 @@ app.get("/posts", function (req, res) {
     }
 });
 
-
 app.use((req,res)=>{
     res.status(404).send("Page dose not exist, please contact your provider!!")
 });
@@ -91,7 +78,6 @@ app.use((req,res)=>{
 /*app.use((req,res)=>{
     res.status(404).sendFile(path.join(__dirname,"/views/404.html"));
 });*/
-
 
 app.get("/posts",(req,res) => {
     data.getAllPosts().then((data) => {
@@ -117,7 +103,6 @@ data.initialize().then(function(){
     console.log("Unable to start server: "+ err);
 })
 
-
 cloudinary.config({
     cloud_name: 'dyannnhat',
     api_key: '614847924866838',
@@ -125,41 +110,40 @@ cloudinary.config({
     secure: true
 });
 
-app.post('/posts/add', upload.single("featureImage"), function (req, res, next)
-{
-   if(req.file) {
+app.post('/posts/add', upload.single("featureImage"), function (req, res, next){
+    if(req.file) {
        let streamUpload = (req) => {
        return new Promise((resolve, reject) => {
        let stream = cloudinary.uploader.upload_stream((error, result) => {
-   if (result) {
+    if (result) {
         resolve(result);
- } else {
+} else {
         reject(error);
- }
- });
- streamifier.createReadStream(req.file.buffer).pipe(stream);
- });
- };
- async function upload(req) {
+}
+});
+streamifier.createReadStream(req.file.buffer).pipe(stream);
+});
+};
 
+async function upload(req) {
     let result = await streamUpload(req);
     console.log(result);
     return result;
- };
- upload(req).then((uploaded)=>{
+};
 
+upload(req).then((uploaded) => {
     processPost(uploaded.url);
- });
- }
-   else {
-     processPost("");
+});
+}
+    else {
+        processPost("");
     }
+function processPost(imageUrl){
+req.body.featureImage = imageUrl;
+// TODO: Process the req.body and add it as a new Blog Post before redirecting to /posts
+};
 
- function processPost(imageUrl){
- req.body.featureImage = imageUrl;
- // TODO: Process the req.body and add it as a new Blog Post before redirecting to /posts
- };
- blogService.addPost(req.body).then(() => {
- res.redirect("/posts");
- })
+blogService.addPost(req.body).then(() => {
+res.redirect("/posts");
+})
 });
