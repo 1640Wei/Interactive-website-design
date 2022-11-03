@@ -5,7 +5,7 @@
 * 
 *  Name: Ching Wei Lai   Student ID: 136893211   Date: 4 Nov 2022
 *
-*  Online (Cyclic) Link: 
+*  Online (Cyclic) Link: https://better-calf-scarf.cyclic.app
 *
 ********************************************************************************/
 const fs = require("fs");
@@ -109,3 +109,16 @@ module.exports.getPostById = (Id) =>{
     }
 });
 };
+
+
+function getPublishedPostsByCategory(category){
+    return new Promise((resolve, reject) => {
+        if(posts.length === 0) {
+            reject('No results returned');
+        } else {
+            resolve(posts.filter(post => {
+                return post.published == true && post.category == category;
+            }));
+        }
+    })
+}
