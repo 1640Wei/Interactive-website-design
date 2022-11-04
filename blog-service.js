@@ -8,16 +8,6 @@
 *  Online (Cyclic) Link: https://better-calf-scarf.cyclic.app
 *
 ********************************************************************************/
- /*********************************************************************************
-*  WEB322 – Assignment 04
-*  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
-*  (including 3rd party web sites) or distributed to other students.
-*
-*  Name: Ching Wei Lai   Student ID: 136893211   Date: 4 Nov 2022
-*
-*  Online (Cyclic) Link: https://better-calf-scarf.cyclic.app
-*
-********************************************************************************/
 const fs = require("fs");
  
 let posts = [];
