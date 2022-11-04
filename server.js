@@ -11,16 +11,16 @@
  
 var express = require("express");
 var blog_service = require("./blog-service");
-var app = express();
-var HTTP_PORT = process.env.PORT || 8080;
-var path = require("path");
-const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+var app = express();
+var path = require("path");
+const multer = require("multer");
 const upload = multer(); 
 const exphbs = require("express-handlebars");
 const stripJs = require("strip-js");
 
+var HTTP_PORT = process.env.PORT || 8080;
 
 app.engine(
 	".hbs",
@@ -29,13 +29,8 @@ app.engine(
 		helpers: {
 			navLink: function (url, options) {
 				return (
-					"<li" +
-					(url == app.locals.activeRoute ? ' class="active" ' : "") +
-					'><a href="' +
-					url +
-					'">' +
-					options.fn(this) +
-					"</a></li>"
+					"<li" + (url == app.locals.activeRoute ? ' class="active" ' : "") +
+					'><a href="' + url + '">' + options.fn(this) + "</a></li>"
 				);
 			},
 			equal: function (lvalue, rvalue, options) {
@@ -55,32 +50,30 @@ app.engine(
 );
 app.set("view engine", ".hbs");
 
-//cloudinary config
+
 cloudinary.config({
 	cloud_name: 'dyannnhat',
     api_key: '614847924866838',
     api_secret: 'IFlyyciCw5LxcOVNFjuiMlJFc2M',
     secure: true,
 });
-//port
+
 function onHttpStart() {
 	console.log("Express http server listening on: " + HTTP_PORT);
 }
-//middleware
+
+
 app.use(express.static("public"));
 
-app.use(function (req, res, next) {
-	let route = req.path.substring(1);
-	app.locals.activeRoute =
-		"/" +
-		(isNaN(route.split("/")[1])
-			? route.replace(/\/(?!.*)/, "")
-			: route.replace(/\/(.*)/, ""));
-	app.locals.viewingCategory = req.query.category;
-	next();
+app.use(function(req,res,next){
+    let route = req.path.substring(1);
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
+    app.locals.viewingCategory = req.query.category;
+    next();
 });
 
-// routes
+
+
 app.get("/", (req, res) => {
 	res.redirect("/blog");
 });
@@ -279,12 +272,12 @@ app.get("/posts/:id", (req, res) => {
 			res.json(error);
 		});
 });
-//exception routes
-app.use((req, res) => {
-	res.status(404);
-	res.render("404");
+
+app.use((req,res)=>{
+    res.status(404).send("Page dose not exist, please contact your provider!!")
 });
-//blog logic
+
+
 blog_service
 	.initialize()
 	.then(() => app.listen(HTTP_PORT, onHttpStart))
