@@ -17,9 +17,11 @@ var path = require("path");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
-const upload = multer(); // no {storage:storage} since we are not using disk storage
+const upload = multer(); 
 const exphbs = require("express-handlebars");
-//handling .hbs extension file
+const stripJs = require("strip-js");
+
+
 app.engine(
 	".hbs",
 	exphbs.engine({
@@ -45,6 +47,9 @@ app.engine(
 					return options.fn(this);
 				}
 			},
+			safeHTML: function (context) {
+				return stripJs(context);
+			},
 		},
 	})
 );
@@ -55,7 +60,7 @@ cloudinary.config({
 	cloud_name: 'dyannnhat',
     api_key: '614847924866838',
     api_secret: 'IFlyyciCw5LxcOVNFjuiMlJFc2M',
-    secure: true
+    secure: true,
 });
 //port
 function onHttpStart() {
@@ -77,22 +82,106 @@ app.use(function (req, res, next) {
 
 // routes
 app.get("/", (req, res) => {
-	res.redirect("/about");
+	res.redirect("/blog");
 });
 
 app.get("/about", (req, res) => {
 	res.render("about");
 });
 
-app.get("/blog", (req, res) => {
-	var error = { message: "" };
-	blog_service
-		.getPublishedPosts()
-		.then((data) => res.send(data))
-		.catch((err) => {
-			error.message = err;
-			res.json(error);
-		});
+app.get("/blog", async (req, res) => {
+	// Declare an object to store properties for the view
+	let viewData = {};
+
+	try {
+		// declare empty array to hold "post" objects
+		let posts = [];
+
+		// if there's a "category" query, filter the returned posts by category
+		if (req.query.category) {
+			// Obtain the published "posts" by category
+			posts = await blog_service.getPublishedPostsByCategory(
+				req.query.category
+			);
+		} else {
+			// Obtain the published "posts"
+			posts = await blog_service.getPublishedPosts();
+		}
+
+		// sort the published posts by postDate
+		posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+
+		// get the latest post from the front of the list (element 0)
+		let post = posts[0];
+
+		// store the "posts" and "post" data in the viewData object (to be passed to the view)
+		viewData.posts = posts;
+		viewData.post = post;
+	} catch (err) {
+		viewData.message = "no results";
+	}
+
+	try {
+		// Obtain the full list of "categories"
+		let categories = await blog_service.getCategories();
+
+		// store the "categories" data in the viewData object (to be passed to the view)
+		viewData.categories = categories;
+	} catch (err) {
+		viewData.categoriesMessage = "no results";
+	}
+
+	// render the "blog" view with all of the data (viewData)
+	res.render("blog", { data: viewData });
+});
+
+app.get("/blog/:id", async (req, res) => {
+	// Declare an object to store properties for the view
+	let viewData = {};
+
+	try {
+		// declare empty array to hold "post" objects
+		let posts = [];
+
+		// if there's a "category" query, filter the returned posts by category
+		if (req.query.category) {
+			// Obtain the published "posts" by category
+			posts = await blog_service.getPublishedPostsByCategory(
+				req.query.category
+			);
+		} else {
+			// Obtain the published "posts"
+			posts = await blog_service.getPublishedPosts();
+		}
+
+		// sort the published posts by postDate
+		posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+
+		// store the "posts" and "post" data in the viewData object (to be passed to the view)
+		viewData.posts = posts;
+	} catch (err) {
+		viewData.message = "no results";
+	}
+
+	try {
+		// Obtain the post by "id"
+		viewData.post = await blog_service.getPostById(req.params.id);
+	} catch (err) {
+		viewData.message = "no results";
+	}
+
+	try {
+		// Obtain the full list of "categories"
+		let categories = await blog_service.getCategories();
+
+		// store the "categories" data in the viewData object (to be passed to the view)
+		viewData.categories = categories;
+	} catch (err) {
+		viewData.categoriesMessage = "no results";
+	}
+
+	// render the "blog" view with all of the data (viewData)
+	res.render("blog", { data: viewData });
 });
 
 app.get("/posts", (req, res) => {
@@ -154,7 +243,6 @@ app.post("/posts/add", upload.single("featureImage"), (req, res) => {
 						reject(error);
 					}
 				});
-
 				streamifier.createReadStream(req.file.buffer).pipe(stream);
 			});
 		};
@@ -193,7 +281,8 @@ app.get("/posts/:id", (req, res) => {
 });
 //exception routes
 app.use((req, res) => {
-	res.status(404).send("Page Not Found");
+	res.status(404);
+	res.render("404");
 });
 //blog logic
 blog_service
