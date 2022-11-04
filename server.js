@@ -46,18 +46,13 @@ app.engine('.hbs', exphbs.engine({
 }));
 app.set('view engine', '.hbs');
  
- 
- 
- 
 var HTTP_PORT = process.env.PORT || 8080;
 function onHTTPSTART() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
- 
 app.get("/", function (req, res) {
     res.redirect("/about");
 });
- 
  
 app.get("/about", (req, res) => {
     res.render("about");
