@@ -116,51 +116,66 @@ module.exports.getPostsByMinDate = function (minDateStr) {
     });
 };
 
-
-module.exports.getPostById = function(id){
-    return new Promise((resolve,reject)=>{
-        let foundPost = posts.find(post => post.id == id);
-
-        if(foundPost){
-            resolve(foundPost);
-        }else{
-            reject("no result returned");
-        }
+module.exports.getPostById = function (num) {
+    return new Promise(function (resolve, reject) {
+      Post.findAll({
+        where:{id: num}
+      }).then((data)=>{
+        resolve(data[0])
+      }).catch((err)=>{
+        reject("requested Post cannot be displayed (getPostById)");
+      })
     });
-}
+};
 
-module.exports.addPost = function(postData){
-    return new Promise((resolve,reject)=>{
-        postData.published = postData.published ? true : false;
-        postData.id = posts.length + 1;
-        posts.push(postData);
+module.exports.addPost = function (postData) {
+    return new Promise(function (resolve, reject) {
+       postData.published = postData.published ? true : false;
+       // blank field should be set to null
+        postData.postDate = new Date();
+       for(var d in postData){
+         if(postData[d] == '') postData[d] = null;
+        }
+        Post.create(postData).then(()=>{
         resolve();
+       }).catch((err)=>{
+         reject("Unable to create post (addPost)");
+       })
     });
-}
+};
 
-module.exports.getPublishedPosts = function(){
-    return new Promise((resolve,reject)=>{
-        let filteredPosts = posts.filter(post => post.published);
-        (filteredPosts.length > 0) ? resolve(filteredPosts) : reject("no results returned");
+module.exports.getPublishedPosts = function () {
+    return new Promise(function (resolve, reject) {
+      Post.findAll({
+        where:{published: true}
+      }).then((data)=>{
+        resolve(data)
+      }).catch((err)=>{
+        reject("No publishedPosts to be displayed (getPublishedPosts)");
+      })
     });
-}
+};
 
-module.exports.getCategories = function(){
-    return new Promise((resolve,reject)=>{
-        (categories.length > 0 ) ? resolve(categories) : reject("no results returned"); 
-    });
-}
- 
- 
-function getPublishedPostsByCategory(category){
+module.exports.getCategories = function () {
     return new Promise((resolve, reject) => {
-        if(posts.length === 0) {
-            reject('No results returned');
-        } else {
-            resolve(posts.filter(post => {
-                return post.published == true && post.category == category;
-            }));
-        }
-    })
-}
+      Category.findAll().then((data)=>{
+        resolve(data);
+      }).catch((err)=>{
+        reject("No results returned (getCategories)");
+      })
+    });
+};
+ 
+ 
+module.exports.getPublishedPostsByCategory = function (categoryNum) {
+    return new Promise(function (resolve, reject) {
+      Post.findAll({
+        where:{published: true, category: categoryNum}
+      }).then((data)=>{
+        resolve(data)
+      }).catch((err)=>{
+        reject("No publishedPosts with passed category to be displayed (getPublishedPostByCategory)");
+      })
+    });
+};
 
