@@ -216,18 +216,6 @@ app.get("/posts", (req, res) => {
 	}
 });
 
-app.get("/categories/add", (req,res)=>{
-	res.render("addCategory");
-  })
-
-app.get("/posts/add", (req, res) => {
-	blogData.getCategories().then((data)=>{
-	  res.render("addPost", { categories : data});
-	}).catch(()=>{
-	  res.render("addPost", {categories : []})
-	})
-});
-
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
 	if (req.file) {
 		let streamUpload = (req) => {
@@ -279,6 +267,35 @@ app.get("/posts/:id", (req, res) => {
 app.use((req,res)=>{
     res.status(404).send("Page dose not exist, please contact your provider!!")
 });
+
+app.get("/posts/add", (req, res) => {
+	blogData.getCategories().then((data)=>{
+	  res.render("addPost", { categories : data});
+	}).catch(()=>{
+	  res.render("addPost", {categories : []})
+	})
+});
+
+app.get("/categories/add", (req,res)=>{
+	res.render("addCategory");
+});
+
+app.get("/categories/delete/:id",(req,res)=>{
+	blogData.deleteCategoryById(req.params.id).then(() => {
+	  res.redirect("/categories");
+	}).catch((err)=>{
+	  res.status(500).send("Unable to Remove Category / Category not found");
+	});
+});
+  
+app.get("/posts/delete/:id",(req,res)=>{
+	blogData.deletePostById(req.params.id).then(() => {
+	  res.redirect("/posts");
+	}).catch((err)=>{
+	  res.status(500).send("Unable to Remove Post / Post not found");
+	});
+});
+
 
 
 blog_service
