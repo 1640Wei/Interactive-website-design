@@ -60,10 +60,6 @@ var Post = sequelize.define('Post', {
   
 
 
-
-
-
-
 module.exports.initialize = function () {
     return new Promise((resolve, reject) => {
         fs.readFile('./data/posts.json', 'utf8', (err, data) => {
@@ -179,3 +175,42 @@ module.exports.getPublishedPostsByCategory = function (categoryNum) {
     });
 };
 
+module.exports.addCategory = function (categoryData) {
+    return new Promise(function (resolve, reject) {
+       Category.create(categoryData).then(()=>{
+        // blank field should be set to null
+        for(var d in categoryData){
+          if(categoryData[d] == '') categoryData[d] = null;
+        }
+        resolve();
+       }).catch((err)=>{
+         reject("Unable to create category (addCategory)");
+       })
+    });
+  };
+  
+
+module.exports.deleteCategoryById = function (id) {
+    return new Promise(function (resolve, reject){
+      Category.destroy({
+        where:{id : id}}
+        ).then(()=>{
+        resolve("destroyed");
+      }).catch((err)=>{
+        reject("Unable to delete category (deleteCategoryById)")
+      })
+    })
+};
+  
+
+module.exports.deletePostById = function (id) {
+    return new Promise(function (resolve, reject){
+      Post.destroy({
+        where:{id : id}}
+        ).then(()=>{
+        resolve("destroyed");
+      }).catch((err)=>{
+        reject("Unable to delete post (deletePostById)")
+      })
+    })
+};

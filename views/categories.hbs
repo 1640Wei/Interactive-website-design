@@ -14,7 +14,8 @@
 					{{#each data}}
 					<tr>
 						<td><a href="/posts?category={{id}}">{{id}}</a></td>
-            <td><a href="/posts?category={{id}}">{{category}}</a></td>
+            			<td><a href="/posts?category={{id}}">{{category}}</a></td>
+						<td><a href="/categories/delete/{{id}}" class="btn btn-success pull-right">remove</a></td>
 					</tr>
 					{{/each}}
 				</tbody>

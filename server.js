@@ -216,19 +216,16 @@ app.get("/posts", (req, res) => {
 	}
 });
 
-app.get("/categories", (req, res) => {
-	var error = { message: "" };
-	blog_service
-		.getCategories()
-		.then((data) => res.render("categories", { data: data }))
-		.catch((err) => {
-			error.message = err;
-			res.render("categories", error);
-		});
-});
+app.get("/categories/add", (req,res)=>{
+	res.render("addCategory");
+  })
 
 app.get("/posts/add", (req, res) => {
-	res.render("addPost");
+	blogData.getCategories().then((data)=>{
+	  res.render("addPost", { categories : data});
+	}).catch(()=>{
+	  res.render("addPost", {categories : []})
+	})
 });
 
 app.post("/posts/add", upload.single("featureImage"), (req, res) => {
