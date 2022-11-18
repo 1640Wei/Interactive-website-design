@@ -129,8 +129,6 @@ app.get('/blog', async (req, res) => {
 });
 
 app.get('/posts', (req, res) => {
-    
-
     let queryPromise = null;
 
     if (req.query.category) {
@@ -270,7 +268,6 @@ app.get('/posts/delete/:id', function(req,res) {
         res.status(500).send("Unable to Remove Post / Post not found");
     });
 });
-
 
 
 app.use((req, res) => {

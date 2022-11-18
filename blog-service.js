@@ -131,7 +131,6 @@ module.exports.addPost = function(postData){
     });
 }
 
-
 module.exports.getPublishedPosts = function(){
     return new Promise((resolve,reject)=>{
         Post.findAll({
@@ -171,8 +170,6 @@ module.exports.getCategories = function(){
     });
 }
 
-
-
 module.exports.addCategory = function(categoryData) {
     return new Promise((resolve, reject) => {
         sequelize.sync().then(() => {
@@ -193,7 +190,6 @@ module.exports.addCategory = function(categoryData) {
         });
     });
 }
-
 
 module.exports.deleteCategoryById = function(id) {
     return new Promise((resolve, reject) => {
