@@ -24,6 +24,13 @@ const app = express();
  
 const HTTP_PORT = process.env.PORT || 8080;
 
+var optionsget = {
+    host : 'localhost',
+    port : 8080,
+    path : '/quote/random', // the rest of the url with parameters if needed
+    method : 'GET' // do GET
+};
+
 cloudinary.config({
     cloud_name: 'dga12xwb2',
     api_key: '694932861513843',
