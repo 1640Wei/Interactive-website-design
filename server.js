@@ -317,7 +317,10 @@ app.get("/categories/delete/:id", ensureLogin, (req,res)=>{
     });
 });
 
-// Adding new routes to login and logout and user history
+app.use((req, res) => {
+    res.status(404).render("404");
+});
+
 app.get("/login", function(req, res) {
     res.render('login');
 });
@@ -361,10 +364,6 @@ app.get("/userHistory", ensureLogin, function (req, res) {
     res.render('userHistory');
 }); 
 
-
-app.use((req, res) => {
-    res.status(404).render("404");
-})
 
 
 blogData.initialize()
