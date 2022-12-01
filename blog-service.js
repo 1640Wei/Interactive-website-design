@@ -204,4 +204,3 @@ module.exports.deleteCategoryById = function (id) {
         });
     });
 }
-
