@@ -22,7 +22,7 @@ const clientSessions = require("client-sessions");
   
 const app = express();
  
-const HTTP_PORT = process.env.PORT || 3000;
+const HTTP_PORT = process.env.PORT || 8080;
 
 cloudinary.config({
     cloud_name: 'dga12xwb2',
