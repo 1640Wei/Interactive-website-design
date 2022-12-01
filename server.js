@@ -1,9 +1,9 @@
 /*********************************************************************************
-*  WEB322 – Assignment 05
+*  WEB322 – Assignment 06
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
 *  (including 3rd party web sites) or distributed to other students.
 *
-*  Name: Ching Wei Lai   Student ID: 136893211   Date: 18 Nov 2022
+*  Name: Ching Wei Lai   Student ID: 136893211   Date: 02 Dec 2022
 *
 *  Online (Cyclic) Link: https://better-calf-scarf.cyclic.app
 *
@@ -11,12 +11,14 @@
  
 const express = require('express');
 const blogData = require("./blog-service");
+const authData = require("./auth-service.js");
 const multer = require("multer");
 const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 const exphbs = require("express-handlebars");
 const path = require("path");
 const stripJs = require('strip-js');
+const clientSessions = require("client-sessions");
 
 const app = express();
  
@@ -64,6 +66,28 @@ app.engine(".hbs", exphbs.engine({
 app.set('view engine', '.hbs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+
+app.use(clientSessions({
+    cookieName: "session", 
+    secret: "my secret is iron man is stronger than thor", 
+    duration: 2 * 60 * 1000, 
+    activeDuration: 1000 * 60 
+}));
+
+app.use(function(req, res, next) {
+    res.locals.session = req.session;
+    next();
+});
+
+function ensureLogin(req, res, next) {
+    if (!req.session.user) {
+      res.redirect("/login");
+    } else {
+      next();
+    }
+}
+
+
 
 app.use(function(req,res,next){
     let route = req.path.substring(1);
@@ -269,10 +293,9 @@ app.get('/posts/delete/:id', function(req,res) {
     });
 });
 
-
 app.use((req, res) => {
     res.status(404).render("404");
-})
+});
 
 blogData.initialize().then(() => {
     app.listen(HTTP_PORT, () => {
@@ -280,4 +303,61 @@ blogData.initialize().then(() => {
     });
 }).catch((err) => {
     console.log(err);
-})
+});
+
+
+
+
+app.get("/login", function(req, res) {
+    res.render('login');
+});
+
+app.get("/register", function(req, res) { 
+    res.render('register');
+});
+
+app.post("/register", function(req, res) {
+    authData.registerUser(req.body)
+    .then(() => {
+        res.render('register', { successMsg: "User created!"})
+    })
+    .catch((err) => {
+        res.render('register', { errorMsg: err, userName: req.body.userName })
+    });
+});
+
+app.post("/login", function(req, res) {
+    req.body.userAgent = req.get('User-Agent');
+    authData.checkUser(req.body).then(function(user) {
+        req.session.user = {
+            userName: user.userName,
+            email: user.email,
+            loginHistory: user.loginHistory
+        }
+        res.redirect('/posts');
+    })  
+    .catch(function(err) {
+        console.log(err);
+        res.render('login', { errorMsg: err, userName: req.body.userName });
+    });
+});
+
+app.get("/logout", function(req, res) {
+    req.session.reset();
+    res.redirect('/');
+});
+
+app.get("/userHistory", ensureLogin, function (req, res) {
+    res.render('userHistory');
+}); 
+
+blogData.initialize()
+.then(authData.initialize)
+.then(function(){
+    app.listen(HTTP_PORT, function(){
+        console.log("app listening on: " + HTTP_PORT)
+    });
+}).catch(function(err){
+    console.log("unable to start server: " + err);
+});
+
