@@ -10,8 +10,8 @@
 ********************************************************************************/
 const Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('database', 'user', 'password', {
-    host: 'host',
+var sequelize = new Sequelize('avzzbvkz', 'avzzbvkz', 'PHCmjluVOza5FKQrCAlzfrEUSJtI-nUm', {
+    host: 'peanut.db.elephantsql.com',
     dialect: 'postgres',
     port: 5432,
     dialectOptions: {
@@ -19,6 +19,7 @@ var sequelize = new Sequelize('database', 'user', 'password', {
     },
     query: { raw: true }
 });
+
 
 // Define a "Post" model
 
