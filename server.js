@@ -24,18 +24,11 @@ const app = express();
  
 const HTTP_PORT = process.env.PORT || 8080;
 
-var optionsget = {
-    host : 'localhost',
-    port : 8080,
-    path : 'https://better-calf-scarf.cyclic.app', // the rest of the url with parameters if needed
-    method : 'GET' // do GET
-};
-
 cloudinary.config({
-    cloud_name: 'dga12xwb2',
-    api_key: '694932861513843',
-    api_secret: '8kE3Cp8pA7PAe4RzWO4ICj9jO1Y',
-    secure: true
+    cloud_name: 'dyannnhat',
+    api_key: '614847924866838',
+    api_secret: 'IFlyyciCw5LxcOVNFjuiMlJFc2M',
+    secure: true,
 });
 
 const upload = multer();
@@ -384,3 +377,4 @@ app.engine(".hbs", exphbs.engine({
   }).catch(function(err){
       console.log("unable to start server: " + err);
   });
+

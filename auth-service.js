@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
-
+// var Schema = mongoose.Schema; Is this necessary???
 var userSchema = new mongoose.Schema({
     "userName" : {
         "type" : String,
@@ -17,12 +17,13 @@ var userSchema = new mongoose.Schema({
 
 let User; // to be defined on new connection (see initialize)
 
+
 module.exports.initialize = function () {
     return new Promise(function (resolve, reject) {
-        let db = mongoose.createConnection("mongodb+srv://dbUser:ESaqhpvd2NPj5yVt@senecaweb.rs7ljnh.mongodb.net/?retryWrites=true&w=majority");
+        let db = mongoose.createConnection("mongodb+srv://dbUser:ESaqhpvd2NPj5yVt@senecamanreet.wwafflw.mongodb.net/?retryWrites=true&w=majority");
 
         db.on('error', (err)=>{
-            reject(err); 
+            reject(err); // reject the promise with the provided error
         });
         db.once('open', ()=>{
            User = db.model("users", userSchema);
@@ -58,6 +59,9 @@ module.exports.registerUser = function(userData) {
     });
 };
 
+
+
+
 module.exports.checkUser = function(userData) {
     return new Promise(function (resolve, reject) {
         User.find({ userName: userData.userName }).exec()
@@ -68,13 +72,14 @@ module.exports.checkUser = function(userData) {
                 bcrypt.compare(userData.password, users[0].password, function (err, result) {
                     if (result === true) {
                         if (users[0].loginHistory == null)
-                            users[0].loginHistory = []; 
+                            users[0].loginHistory = []; // make array if none exists (first login)
 
                         users[0].loginHistory.push({ 
                             dateTime: (new Date()).toString(),
                             userAgent: userData.userAgent
                         });
                         
+                        // using updateOne instead of update
                         User.updateOne({ userName: users[0].userName },
                             { $set: { loginHistory: users[0].loginHistory } }
                         ).exec()
