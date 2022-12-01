@@ -364,8 +364,6 @@ app.get("/userHistory", ensureLogin, function (req, res) {
     res.render('userHistory');
 }); 
 
-
-
 blogData.initialize()
 .then(authData.initialize)
 .then(function(){
