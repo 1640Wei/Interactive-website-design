@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
-// var Schema = mongoose.Schema; Is this necessary???
 var userSchema = new mongoose.Schema({
     "userName" : {
         "type" : String,
