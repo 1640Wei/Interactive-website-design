@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <!-- Latest compiled and minified Bootstrap 3.4.1 CSS -->
-      <link rel="stylesheet" href="https://bootswatch.com/3/sandstone/bootstrap.min.css" />
-      <link rel="stylesheet" href="/css/main.css">
-  </head>
 <div class="row">
     <section class="main col-md-9">
         {{#if data.post}}
@@ -18,8 +8,7 @@
                 {{#safeHTML data.post.body}}{{/safeHTML}}
                 <br /><br />
                 <strong>Category:</strong> {{data.post.category}}<br />
-                
-                <strong>Last Updated:</strong> {{#formatDate data.post.updatedAt}}{{/formatDate}}
+                <strong>Last Updated:</strong> {{#formatDate data.post.postDate}}{{/formatDate}}
             </article>
         {{else}}
             <div class="col-md-12 text-center">
@@ -50,4 +39,3 @@
         {{/if}}
     </aside>
 </div>
-</html>
