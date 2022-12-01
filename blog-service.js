@@ -20,7 +20,6 @@ var sequelize = new Sequelize('avzzbvkz', 'avzzbvkz', 'PHCmjluVOza5FKQrCAlzfrEUS
     query: { raw: true }
 });
 
-
 // Define a "Post" model
 
 var Post = sequelize.define('Post', {
