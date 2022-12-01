@@ -1,19 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
-var userSchema = new mongoose.Schema({
-    "userName" : {
-        "type" : String,
-        "unique" : true 
-    },
-    "password" : String,
-    "email" : String,
-    "loginHistory" : [{
-        "dateTime" : Date,
-        "userAgent" : String
-    }]
-});
-
 let User; // to be defined on new connection (see initialize)
 
 
