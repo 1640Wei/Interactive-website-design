@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
+
 var userSchema = new mongoose.Schema({
     "userName" : {
         "type" : String,
@@ -14,11 +15,11 @@ var userSchema = new mongoose.Schema({
     }]
 });
 
-let User; // to be defined on new connection (see initialize) 
+let User; // to be defined on new connection (see initialize)
 
 module.exports.initialize = function () {
     return new Promise(function (resolve, reject) {
-        let db = mongoose.createConnection("mongodb+srv://dbUser:ESaqhpvd2NPj5yVt@senecaweb.rs7ljnh.mongodb.net/?retryWrites=true&w=majority");
+        let db = mongoose.createConnection("mongodb+srv://manreet:manreet@senecamanreet.wwafflw.mongodb.net/?retryWrites=true&w=majority");
 
         db.on('error', (err)=>{
             reject(err); 
@@ -56,6 +57,8 @@ module.exports.registerUser = function(userData) {
         }
     });
 };
+
+
 
 
 module.exports.checkUser = function(userData) {

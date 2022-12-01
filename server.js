@@ -59,21 +59,20 @@ app.engine(".hbs", exphbs.engine({
             let day = dateObj.getDate().toString();
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
         }
-        
     }
 }));
 
 app.set('view engine', '.hbs');
-app.use(express.urlencoded({extended: true}));
+
 app.use(express.static('public'));
 
 app.use(clientSessions({
-    cookieName: "session", 
-    secret: "my secret is iron man is stronger than thor", 
-    duration: 2 * 60 * 1000, 
-    activeDuration: 1000 * 60 
+    cookieName: "session", // this is the object name that will be added to 'req'
+    secret: "my secret is iron man is stronger than thor", // this should be a long un-guessable string.
+    duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+    activeDuration: 1000 * 60 // the session will be extended by this many ms each request (1 minute)
 }));
-
+  
 app.use(function(req, res, next) {
     res.locals.session = req.session;
     next();
@@ -87,11 +86,11 @@ function ensureLogin(req, res, next) {
     }
 }
 
-
+app.use(express.urlencoded({extended: true}));
 
 app.use(function(req,res,next){
     let route = req.path.substring(1);
-    app.locals.activeRoute = (route == "/") ? "/" : "/" + route.replace(/\/(.*)/, "");
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));    
     app.locals.viewingCategory = req.query.category;
     next();
 });
@@ -152,7 +151,8 @@ app.get('/blog', async (req, res) => {
 
 });
 
-app.get('/posts', (req, res) => {
+app.get('/posts', ensureLogin, (req, res) => {
+
     let queryPromise = null;
 
     if (req.query.category) {
@@ -164,36 +164,74 @@ app.get('/posts', (req, res) => {
     }
 
     queryPromise.then(data => {
-        if(data.length > 0) {
-            res.render('posts',{ posts: data });
-            
-        } else {
-            res.render("posts", {message: "no results"});
-        }
+        (data.length > 0) ? res.render("posts", {posts: data}) : res.render("posts",{ message: "no results" });
     }).catch(err => {
         res.render("posts", {message: "no results"});
     })
 
 });
 
+app.post("/posts/add", ensureLogin, upload.single("featureImage"), (req,res)=>{
 
-app.get("/posts/add", (req, res) => {
-    blogData.getCategories().then((data) => {
-        res.render("addPost",{categories: data});
-    }).catch((err) => {
-        res.render("addPost", {categories: []});
+    if(req.file){
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
+                    }
+                );
+    
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };
+    
+        async function upload(req) {
+            let result = await streamUpload(req);
+            console.log(result);
+            return result;
+        }
+    
+        upload(req).then((uploaded)=>{
+            processPost(uploaded.url);
+        });
+    }else{
+        processPost("");
+    }
+
+    function processPost(imageUrl){
+        req.body.featureImage = imageUrl;
+
+        blogData.addPost(req.body).then(post=>{
+            res.redirect("/posts");
+        }).catch(err=>{
+            res.status(500).send(err);
+        })
+    }   
+});
+
+app.get('/posts/add', ensureLogin, (req, res) => {
+    blogData.getCategories().then((data)=>{
+        res.render("addPost", {categories: data});
+     }).catch((err) => {
+       // set category list to empty array
+       res.render("addPost", {categories: [] });
     });
 });
 
-app.post('/posts/add', (req, res) => {
-    blogData.addPost(req.body).then((data) => {
-       res.redirect("/posts");
-    }).catch((err) => {
-        console.log(err);
+app.get("/posts/delete/:id", ensureLogin, (req,res)=>{
+    blogData.deletePostById(req.params.id).then(()=>{
+      res.redirect("/posts");
+    }).catch((err)=>{
+      res.status(500).send("Unable to Remove Post / Post Not Found");
     });
 });
 
-app.get('/post/:id', (req,res)=>{
+app.get('/post/:id', ensureLogin, (req,res)=>{
     blogData.getPostById(req.params.id).then(data=>{
         res.json(data);
     }).catch(err=>{
@@ -251,63 +289,35 @@ app.get('/blog/:id', async (req, res) => {
     res.render("blog", {data: viewData})
 });
 
-app.get('/categories', (req, res) => {
+app.get('/categories', ensureLogin, (req, res) => {
     blogData.getCategories().then((data => {
-        if(data.length > 0) {
-            res.render('categories',{ categories: data });
-        } else {
-            res.render("categories", {message: "no results"});
-        }
+        (data.length > 0) ? res.render("categories", {categories: data}) : res.render("categories",{ message: "no results" });
     })).catch(err => {
         res.render("categories", {message: "no results"});
     });
 });
 
-app.get('/categories/add',function(req,res) {
-    res.render('addCategory');
+app.get('/categories/add', ensureLogin, (req, res) => {
+    res.render("addCategory");
 });
 
-app.post('/categories/add', (req, res) =>  {
-
-    blogData.addCategory(req.body).then((data) => {
+app.post('/categories/add', ensureLogin, (req,res)=>{
+    blogData.addCategory(req.body).then(category=>{
         res.redirect("/categories");
     }).catch(err=>{
-        res.status(500).send(err);
+        res.status(500).send(err.message);
     })
 });
 
-
-app.get('/categories/delete/:id', function(req,res) {
-    blogData.deleteCategoryById(req.params.id).then(() => {
-        res.redirect("/categories");
-    }).catch(() => {
-        res.status(500).send("Unable to Remove Category / Category not found");
+app.get("/categories/delete/:id", ensureLogin, (req,res)=>{
+    blogData.deleteCategoryById(req.params.id).then(()=>{
+      res.redirect("/categories");
+    }).catch((err)=>{
+      res.status(500).send("Unable to Remove Category / Category Not Found");
     });
 });
 
-app.get('/posts/delete/:id', function(req,res) {
-    blogData.deletePostById(req.params.id).then(() => {
-        res.redirect("/posts");
-    }).catch(() => {
-        res.status(500).send("Unable to Remove Post / Post not found");
-    });
-});
-
-app.use((req, res) => {
-    res.status(404).render("404");
-});
-
-blogData.initialize().then(() => {
-    app.listen(HTTP_PORT, () => {
-        console.log('server listening on: ' + HTTP_PORT);
-    });
-}).catch((err) => {
-    console.log(err);
-});
-
-
-
-
+// Adding new routes to login and logout and user history
 app.get("/login", function(req, res) {
     res.render('login');
 });
@@ -351,6 +361,12 @@ app.get("/userHistory", ensureLogin, function (req, res) {
     res.render('userHistory');
 }); 
 
+
+app.use((req, res) => {
+    res.status(404).render("404");
+})
+
+
 blogData.initialize()
 .then(authData.initialize)
 .then(function(){
@@ -360,4 +376,3 @@ blogData.initialize()
 }).catch(function(err){
     console.log("unable to start server: " + err);
 });
-
