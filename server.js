@@ -332,31 +332,37 @@ app.engine(".hbs", exphbs.engine({
       res.render('register');
   });
   
-  app.post("/register", function(req, res) {
-      authData.registerUser(req.body)
-      .then(() => {
-          res.render('register', { successMsg: "User created!"})
-      })
-      .catch((err) => {
-          res.render('register', { errorMsg: err, userName: req.body.userName })
-      });
-  });
-  
-  app.post("/login", function(req, res) {
-      req.body.userAgent = req.get('User-Agent');
-      authData.checkUser(req.body).then(function(user) {
-          req.session.user = {
-              userName: user.userName,
-              email: user.email,
-              loginHistory: user.loginHistory
-          }
-          res.redirect('/posts');
-      })  
-      .catch(function(err) {
-          console.log(err);
-          res.render('login', { errorMsg: err, userName: req.body.userName });
-      });
-  });
+  app.post("/register", (req, res) => {
+    authData.registerUser(req.body)
+        .then(() => {
+            res.render('register', { successMessage: "User Created" });
+        })
+        .catch((err) => {
+            res.render('register', {
+                errorMessage: err,
+                userName: req.body.userName
+            });
+        })
+});
+
+app.post("/login", (req, res) => {
+    req.body.userAgent = req.get('User-Agent');
+
+    authData.checkUser(req.body).then((user) => {
+        req.session.user = {
+            "userName": user.userName,
+            "email": user.email,
+            "loginHistory": user.loginHistory
+        }
+        res.redirect('/posts');
+    })
+        .catch((err) => {
+            res.render('login', {
+                errorMessage: err,
+                userName: req.body.userName
+            });
+        })
+});
   
   app.get("/logout", function(req, res) {
       req.session.reset();
