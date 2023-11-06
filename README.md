@@ -1,4 +1,4 @@
-Hello, I am Wei. 📎
+Hello, I am Wei. 🗞
 ======
 
 ### Project Name: JavaScript-Blog
@@ -47,7 +47,7 @@ Hello, I am Wei. 📎
 ***
 ### Thanks:
 
-📎 I hope you enjoy this project! If you have any questions or suggestions, feel free to reach out at any time. 📎
+🗞 I hope you enjoy this project! If you have any questions or suggestions, feel free to reach out at any time. 🗞
 
 ✉️ HTY140226@gmail.com
 
