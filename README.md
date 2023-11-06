@@ -13,7 +13,27 @@ Hello, I am Wei. 📎
 - **CSS**: 
 
 ### Project Structure:：
-- `D.html`：
+
++ public/css
+  + `main.css`:
+
++ views
+  + `404.hbs`:
+  + `about.hbs`:
+  + `addCategory.hbs`:
+  + `addPost.hbs`:
+  + `blog.hbs`:
+  + `categories.hbs`:
+  + `login.hbs`:
+  + `posts.hbs`:
+  + `register.hbs`:
+  + `userHistory.hbs`:
+
++ `auth-service.js`:
++ `blog-service.js`:
++ `package-lock.json`:
++ `package.json`:
++ `server.js`:
 
 ### Example:
 
